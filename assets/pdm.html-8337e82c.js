@@ -1,0 +1,1 @@
+import{_ as n,W as o,X as r,Y as e,Z as a,$ as c,D as s}from"./framework-9199a8c2.js";const l={},_={href:"https://pdm.fming.dev/latest/",target:"_blank",rel:"noopener noreferrer"};function m(d,p){const t=s("ExternalLinkIcon");return o(),r("div",null,[e("p",null,[e("a",_,[a("HomePage"),c(t)])])])}const i=n(l,[["render",m],["__file","pdm.html.vue"]]);export{i as default};
