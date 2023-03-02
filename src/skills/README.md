@@ -1,6 +1,6 @@
 ---
 title: 技能
-icon: logos:google-developers
+icon: game-icons:skills
 article: false
 index: false
 ---

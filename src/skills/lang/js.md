@@ -2,6 +2,13 @@
 title: JavaScript
 icon: simple-icons:nodedotjs
 order: 300
+# isOriginal: true
+star: true
+sticky: true
+category:
+    - 编程语言
+tag:
+    - 网页
 ---
 > [JavaScript](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript) 是一种脚本语言，可以用来创建动态更新的内容，控制多媒体，制作图像动画，还有很多。(好吧，虽然它不是万能的，但可以通过简短的代码来实现神奇的功能。）
 
