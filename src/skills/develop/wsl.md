@@ -1,7 +1,7 @@
 ---
 title: WSL
 icon: fa6-solid:w
-order: 3
+order: 2
 ---
 
 ## 参考

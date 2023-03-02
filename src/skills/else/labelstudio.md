@@ -1,6 +1,7 @@
 ---
 title: Label Studio
 icon: fa6-solid:l
+order: 1
 ---
 ## 拉取
 ```bash
