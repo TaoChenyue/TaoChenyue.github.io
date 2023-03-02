@@ -1,0 +1,1 @@
+import{_ as o,W as r,X as n,Y as e,Z as c,$ as a,D as s}from"./framework-9199a8c2.js";const _={},l={href:"https://github.com/pytorch/serve",target:"_blank",rel:"noopener noreferrer"};function h(m,p){const t=s("ExternalLinkIcon");return r(),n("div",null,[e("p",null,[e("a",l,[c("HomePage"),a(t)])])])}const i=o(_,[["render",h],["__file","torchserve.html.vue"]]);export{i as default};

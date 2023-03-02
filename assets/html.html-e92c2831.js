@@ -1,0 +1,1 @@
+import{_ as t,W as o,X as c,Y as e}from"./framework-9199a8c2.js";const l={},_=e("blockquote",null,[e("p",null,"HTML是一种标记语言，用来结构化我们的网页内容并赋予内容含义，例如定义段落、标题和数据表，或在页面中嵌入图片和视频。")],-1),n=[_];function s(r,a){return o(),c("div",null,n)}const u=t(l,[["render",s],["__file","html.html.vue"]]);export{u as default};

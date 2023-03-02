@@ -1,0 +1,1 @@
+import{_ as s,W as t,X as c,Y as e}from"./framework-9199a8c2.js";const o={},_=e("blockquote",null,[e("p",null,"CSS 是一种样式规则语言，可将样式应用于 HTML 内容，例如设置背景颜色和字体，在多个列中布局内容。")],-1),n=[_];function l(r,a){return t(),c("div",null,n)}const d=s(o,[["render",l],["__file","css.html.vue"]]);export{d as default};
