@@ -123,7 +123,7 @@ a.unshift('1');
 let a={name:"a"};
 a.name
 ```
-    + class
+  + class
 ```js
 class Person {
     name;

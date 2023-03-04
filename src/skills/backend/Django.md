@@ -2,6 +2,10 @@
 title: Django
 icon: tabler:brand-django
 order: 1
+star: true
+sticky: true
+tags:
+    - Web框架
 ---
 > [Django 是一个由 Python 编写的一个开放源代码的 Web 应用框架。](https://www.runoob.com/django/django-intro.html)
 
@@ -119,5 +123,9 @@ class Student:
 2. 反向查询: ```course.student__set.name```
 
 
-## Django Rest Framework
-### 
+## [Django Rest Framework](https://www.django-rest-framework.org/)
+```sh
+pip install djangorestframework
+```
+1. 序列化:将对象翻译为JSON
+2. 反序列化：将JSON翻译为对象
