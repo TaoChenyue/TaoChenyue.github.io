@@ -123,9 +123,106 @@ class Student:
 2. 反向查询: ```course.student__set.name```
 
 
-## [Django Rest Framework](https://www.django-rest-framework.org/)
+## Django Rest Framework
+[官网](https://www.django-rest-framework.org/)
 ```sh
 pip install djangorestframework
 ```
-1. 序列化:将对象翻译为JSON
-2. 反序列化：将JSON翻译为对象
+### View
+#### FBV(Function Based View)
+ 路由指向函数,以上的内容都是。
+#### CBV(Class Based View)
+路由指向类,是DRF实现的基础
+1. View
+``` python
+# views.py
+from django.views import View
+class MyView(View):
+    def get(self,request):
+        return HttpResponse("GET")
+    def post(self,request):
+        return HttpResponse("POST")
+    def delete(self,request):
+        return HttpResponse("DELETE")
+# urls.py
+path("my/",MyView.as_view())
+```
+View.as_view()中的dispatch()实现了不同的请求方式分发到不同的函数。
+```mermaid
+graph LR;
+request.GET-->dispatch-->MyView.get
+request.POST-->dispatch-->MyView.post
+request.DELETE-->dispatch-->MyView.delete
+```
+::: tip 解决CSRF错误 
+使用rest_framework的APIView及其子类无需注释
+``` python
+# settings.py注释这一行
+# "django.middleware.csrf.CsrfViewMiddleware",
+```
+:::
+
+2. APIView
+APIView.as_view() 对View.as_view()进行了完善，比如跨域处理、对request对象进行功能增强、增加了认证、权限、限流功能。
+可以直接通过```request.data```获取各种请求方式的解析数据。
+
+### Model
+#### Serializers
++ 序列化:对象转(JSON)数据
++ 反序列化:对(JSON)数据校验并转换成对象
+1. Serializer
+```python
+# models.py
+from django.db import models
+# Create your models here.
+class MyModel(models.Model):
+    class Meta:
+        db_table="mymodel"
+        
+    age=models.IntegerField(
+        verbose_name="年龄",
+        default=20,
+        help_text="age of user"
+    )
+    name=models.CharField(
+        verbose_name="名称",
+        max_length=20,
+        null=True
+    )
+    join_date=models.DateField(
+        verbose_name="日期",
+        auto_created=True
+    )
+# serializers.py
+from .models import MyModel
+from rest_framework import serializers
+class MySerializers(serializers.Serializer):
+    age=serializers.IntegerField()
+    name=serializers.CharField(max_length=20)
+    # 如果设置不同名称，需要添加source
+    date=serializers.DateField(source="join_date")
+# views.py
+from rest_framework.views import APIView,Response
+from .models import MyModel
+from .serializers import MySerializers
+# Create your views here.
+class MyView(APIView):
+    def get(self,request):
+        objs=MyModel.objects.all()
+        # 序列化
+        serializer=MySerializers(instance=objs,many=True)
+        return Response(serializer.data)
+    def post(self,request):
+        # 反序列化
+        serializer=MySerializers(data=request.data)
+        # 数据校验
+        if serializer.is_valid():
+            newObj=MyModel.objects.create(**serializer.data)
+            return Response(MySerializers(newObj).data)
+        else:
+            return Response(serializer.errors)
+```
++ serializer.data 返回有序字典，挑选的内容在Serializer中定义
++ rest_framework.Response 对字典数据进行封装
+
+2. ModelSerializer
