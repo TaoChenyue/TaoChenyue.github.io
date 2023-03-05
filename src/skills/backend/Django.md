@@ -4,7 +4,7 @@ icon: tabler:brand-django
 order: 1
 star: true
 sticky: true
-tags:
+tag:
     - Web框架
 ---
 > [Django 是一个由 Python 编写的一个开放源代码的 Web 应用框架。](https://www.runoob.com/django/django-intro.html)
@@ -23,38 +23,6 @@ python manage.py migrate
 # 启动服务
 python manage.py runserver 8081
 ```
-## 创建一个view
-```sh
-# 创建一个项目，比如temp
-django-admin startproject temp
-```
-```python
-# 在views.py创建一个处理函数
-from django.http import JsonResponse
-def hello(request):
-    return JsonResponse(data={
-        "msg":"Hello world"
-    })
-# 在temp下创建urls.py
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('hello/',views.hello),
-]
-# 在backend下的urls.py包含路径
-path('temp/',include('temp.urls'))
-# 再次启动服务即可在 temp/hello/ 看到信息
-```
-views.py 中的每个函数的输入都是 django.http.HttpRequest对象，包含name,head,body,method等方法。
-
-Methods:
-+ GET 不给数据直接看
-+ POST 给数据完看返回值
-+ DELETE 删除一个对象
-+ PUSH 更新一个对象，需要对象的全部信息
-+ PATCH 更新一个对象，需要对象的部分信息
-
 ## 创建一个model
 ```python
 # 在models.py 中添加
@@ -121,6 +89,39 @@ class Student:
 ```
 1. 正向查询: ```student.course.name```
 2. 反向查询: ```course.student__set.name```
+## 创建一个view
+```sh
+# 创建一个项目，比如temp
+django-admin startproject temp
+```
+```python
+# 在views.py创建一个处理函数
+from django.http import JsonResponse
+def hello(request):
+    return JsonResponse(data={
+        "msg":"Hello world"
+    })
+# 在temp下创建urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('hello/',views.hello),
+]
+# 在backend下的urls.py包含路径
+path('temp/',include('temp.urls'))
+# 再次启动服务即可在 temp/hello/ 看到信息
+```
+views.py 中的每个函数的输入都是 django.http.HttpRequest对象，包含name,head,body,method等方法。
+
+Methods:
++ GET 不给数据直接看
++ POST 给数据完看返回值
++ DELETE 删除一个对象
++ PUSH 更新一个对象，需要对象的全部信息
++ PATCH 更新一个对象，需要对象的部分信息
+
+
 
 
 ## Django Rest Framework
@@ -128,44 +129,6 @@ class Student:
 ```sh
 pip install djangorestframework
 ```
-### View
-#### FBV(Function Based View)
- 路由指向函数,以上的内容都是。
-#### CBV(Class Based View)
-路由指向类,是DRF实现的基础
-1. View
-``` python
-# views.py
-from django.views import View
-class MyView(View):
-    def get(self,request):
-        return HttpResponse("GET")
-    def post(self,request):
-        return HttpResponse("POST")
-    def delete(self,request):
-        return HttpResponse("DELETE")
-# urls.py
-path("my/",MyView.as_view())
-```
-View.as_view()中的dispatch()实现了不同的请求方式分发到不同的函数。
-```mermaid
-graph LR;
-request.GET-->dispatch-->MyView.get
-request.POST-->dispatch-->MyView.post
-request.DELETE-->dispatch-->MyView.delete
-```
-::: tip 解决CSRF错误 
-使用rest_framework的APIView及其子类无需注释
-``` python
-# settings.py注释这一行
-# "django.middleware.csrf.CsrfViewMiddleware",
-```
-:::
-
-2. APIView
-APIView.as_view() 对View.as_view()进行了完善，比如跨域处理、对request对象进行功能增强、增加了认证、权限、限流功能。
-可以直接通过```request.data```获取各种请求方式的解析数据。
-
 ### Model
 #### Serializers
 + 序列化:对象转(JSON)数据
@@ -226,3 +189,113 @@ class MyView(APIView):
 + rest_framework.Response 对字典数据进行封装
 
 2. ModelSerializer
+
+对Serializer的封装
+```python
+class MySerializers(serializers.ModelSerializer):
+    date = serializers.DateField(source="join_date",required=False)
+    class Meta:
+        model = MyModel
+        fields = ["age","name","date"]
+```
+### View
+#### FBV(Function Based View)
+ 路由指向函数,以上的内容都是。
+#### CBV(Class Based View)
+路由指向类,是DRF实现的基础
+1. View
+    ``` python
+    # views.py
+    from django.views import View
+    class MyView(View):
+        def get(self,request):
+            return HttpResponse("GET")
+        def post(self,request):
+            return HttpResponse("POST")
+        def delete(self,request):
+            return HttpResponse("DELETE")
+    # urls.py
+    path("my/",MyView.as_view())
+    ```
+    ::: tip 解决CSRF错误 
+    使用rest_framework的APIView及其子类无需注释
+    ``` python
+    # settings.py注释这一行
+    # "django.middleware.csrf.CsrfViewMiddleware",
+    ```
+    :::
+    View.as_view()中的dispatch()实现了不同的请求方式分发到不同的函数。
+    ```mermaid
+    graph LR;
+    request.GET-->dispatch-->MyView.get
+    request.POST-->dispatch-->MyView.post
+    request.DELETE-->dispatch-->MyView.delete
+    ```
+
+2. APIView(View的子类)
+    APIView.as_view() 对View.as_view()进行了完善，比如跨域处理、对request对象进行功能增强、增加了认证、权限、限流功能。
+    可以直接通过```request.data```获取各种请求方式的解析数据。
+3. GenericAPIView(APIView的子类)
+    将查询对象和序列化器提取出来
+    + queryset
+    + serializer
+4. rest_framework.mixins(需要和GenericAPIView结合使用)
+    + ListModelMixin: 查全部->list()
+    + CreateModelMixin: 创建一个->create()
+    + RetrieveModelMixin: 查个体->retrieve()
+    + UpdateModelMixin: 改个体->update()
+    + DestroyModelMixin: 删个体->destroy()
+5. rest_framework.generic
+    + ListCreateAPIView = ListModelMixin+CreateModelMixin+GenericAPIView
+    + RetriveUpdateDestroyAPIView = RetrieveModelMixin+UpdateModelMixin+DestroyModelMixin+GenericAPIView
+    + 同理，可以自由选择
+6. ViewSet(ViewSetMixin, views.APIView):
+    在ViewSetMixin.as_view()中实现了由字典完成请求方式的分发
+    ```python
+    as_view({
+        "get":"get_fun_name",
+        "post":"post_fun_name"
+    })
+7. GenericViewSet(ViewSetMixin, views.GenericAPIView)
+8. ModelViewSet(CreateModelMixin,RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin,ListModelMixin,GenericViewSet)
+
+### 路由
+```python
+# urls.py
+from rest_framework import routers
+from demo.views import MyView
+router=routers.DefaultRouter()
+# basename 默认是queryset的模型的小写名称，影响反向路由解析
+router.register("my",MyView,basename="my")
+```
+
+### 认证
+```python
+class MyAuth:
+    def authenticate(self,request):
+        return None
+        # return (request.user,None)
+class MyView(ModelViewSet):
+    queryset=MyModel.objects.all()
+    serializer_class = MySerializers
+    authentication_classes = [MyAuth,]
+```
+
+### 权限
+```python
+from rest_framework.permissions import BasePermission
+class MyPermit(BasePermission):
+    def has_permission(self, request, view):
+        return True
+    def has_object_permission(self, request, view, obj):
+        return False
+class MyView(ModelViewSet):
+    queryset=MyModel.objects.all()
+    serializer_class = MySerializers
+    permission_classes = [MyPermit,]
+```
+
+## 搜索、过滤、分页、排序
+参考：
+1. [搜索、过滤、分页、排序](https://blog.csdn.net/t_i_a_n_/article/details/99625478)
+2. [过滤](https://zhuanlan.zhihu.com/p/110060840)
