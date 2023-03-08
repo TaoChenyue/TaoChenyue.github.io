@@ -112,6 +112,13 @@ urlpatterns = [
 path('temp/',include('temp.urls'))
 # 再次启动服务即可在 temp/hello/ 看到信息
 ```
+::: tip
+删除一个app：确保没有其他app 引用该app
+```sh
+python manage.py migrate app-name zero
+```
+然后删除相关引用，INSTALL_APPS.
+:::
 views.py 中的每个函数的输入都是 django.http.HttpRequest对象，包含name,head,body,method等方法。
 
 Methods:
@@ -299,3 +306,39 @@ class MyView(ModelViewSet):
 参考：
 1. [搜索、过滤、分页、排序](https://blog.csdn.net/t_i_a_n_/article/details/99625478)
 2. [过滤](https://zhuanlan.zhihu.com/p/110060840)
+```python
+REST_FRAMEWORK = {
+    # 认证
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    # 权限
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    # 过滤
+    "DEFAULT_FILTER_BACKENDS": (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ),
+    # 分页
+    "DEFAULT_PAGINATION_CLASS": "user.pagination.DefaultPagination",
+}
+```
+需要注意的是过滤的关键词是 ```filterset_fields``` 而不是 ```filter_fields```
+
+## 接口文档
+[参考](https://cloud.tencent.com/developer/article/1812525)
+```python
+# pip install coreapi
+# settings.py
+REST_FRAMEWORK = {
+    # 文档
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
+}
+# urls.py
+from rest_framework.documentation import include_docs_urls
+urlpatterns = [
+    path('docs/',include_docs_urls(title="API接口文档")),
+]
+```
