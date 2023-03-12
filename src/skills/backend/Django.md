@@ -342,3 +342,6 @@ urlpatterns = [
     path('docs/',include_docs_urls(title="API接口文档")),
 ]
 ```
+
+## 其他三方工具
++ [django-cleanup](https://github.com/un1t/django-cleanup)
