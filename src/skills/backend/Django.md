@@ -302,10 +302,11 @@ class MyView(ModelViewSet):
     permission_classes = [MyPermit,]
 ```
 
-## 搜索、过滤、分页、排序
+## 搜索、过滤、分页、排序、限流
 参考：
 1. [搜索、过滤、分页、排序](https://blog.csdn.net/t_i_a_n_/article/details/99625478)
 2. [过滤](https://zhuanlan.zhihu.com/p/110060840)
+3. [限流](https://blog.csdn.net/li944254211/article/details/109491804)
 ```python
 REST_FRAMEWORK = {
     # 认证
