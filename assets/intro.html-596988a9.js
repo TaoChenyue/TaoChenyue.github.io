@@ -1,0 +1,1 @@
+import{_ as e}from"./plugin-vue_export-helper-c27b6911.js";import{o as t,c as o,a as c}from"./app-1e667812.js";const n={},r=c("p",null,"搭着玩的，偶尔更新下，也许吧...",-1),_=[r];function s(a,l){return t(),o("div",null,_)}const m=e(n,[["render",s],["__file","intro.html.vue"]]);export{m as default};
